@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { register } = require("../auth/signup");
-const { login } = require("../auth/login");
+const { register } = require("../../controllers/auth/signup");
+const { login } = require("../../controllers/auth/login");
 
 // auth paths
 

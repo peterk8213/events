@@ -34,7 +34,12 @@ const start = async () => {
 
 // authentication route //
 
-const AuthRouter = require("./routes/user_auth");
+const AuthRouter = require("./routes/auth/user_auth");
 app.use("/api/v1/auth", AuthRouter);
+
+///// events route /////
+
+const EventsRouter = require("./routes/events/event-route");
+app.use("/api/v1/events", EventsRouter);
 
 start();

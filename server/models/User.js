@@ -21,16 +21,16 @@ const UserSchema = new mongoose.Schema({
   },
   phonenumber: {
     type: String,
-    required: false,
+    required: true,
     unique: true,
   },
-  age: {
-    type: String,
+  birthdate: {
+    type: Date,
     required: false,
   },
   gender: {
     type: String,
-    required: false,
+    required: true,
   },
   country: {
     type: String,
@@ -55,6 +55,10 @@ const UserSchema = new mongoose.Schema({
     required: false,
   },
   followers: [mongoose.Schema.Types.ObjectId],
+  total_followers: {
+    type: Number,
+    default: 0,
+  },
   joined_at: {
     type: Date,
     default: Date.now(),
