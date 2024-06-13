@@ -42,4 +42,9 @@ app.use("/api/v1/auth", AuthRouter);
 const EventsRouter = require("./routes/events/event-route");
 app.use("/api/v1/events", EventsRouter);
 
+//////  user route  //////
+
+const UserRouter = require("./routes/users/user-router");
+app.use("/api/v1/user", UserRouter);
+
 start();

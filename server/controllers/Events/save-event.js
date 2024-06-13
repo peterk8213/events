@@ -2,7 +2,7 @@ const Event = require("../../models/events");
 
 const { StatusCodes } = require("http-status-codes");
 
-const getEvents = async (req, res) => {
+const saveEvent = async (req, res) => {
   try {
     const query = { is_deleted: { $ne: true } }; // Exclude documents with is_deleted: true
 
@@ -14,9 +14,7 @@ const getEvents = async (req, res) => {
 
     // Await both promises
     const [count, events] = await Promise.all([countPromise, eventsPromise]);
-    if (!events) {
-      return res.status(StatusCodes.NOT_FOUND).json({ msg: "event not found" });
-    }
+
     res.status(StatusCodes.OK).json({ count, events });
   } catch (error) {
     console.error(error);
@@ -26,4 +24,4 @@ const getEvents = async (req, res) => {
   }
 };
 
-module.exports = { getEvents };
+module.exports = { saveEvent };

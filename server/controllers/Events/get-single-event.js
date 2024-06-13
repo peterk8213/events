@@ -15,7 +15,9 @@ const getSingleEvent = async (req, res) => {
 
     // Await both promises
     const [count, events] = await Promise.all([countPromise, eventsPromise]);
-
+    if (!events) {
+      return res.status(StatusCodes.NOT_FOUND).json({ msg: "event not found" });
+    }
     res.status(StatusCodes.OK).json({ count, events });
   } catch (error) {
     console.error(error);

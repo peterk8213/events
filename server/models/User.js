@@ -54,7 +54,38 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  followers: [mongoose.Schema.Types.ObjectId],
+  following: [
+    {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      username: {
+        type: String,
+        required: true,
+      },
+      followedAt: { type: Date, default: Date.now },
+    },
+  ],
+  total_following: {
+    type: Number,
+    default: 0,
+  },
+  followers: [
+    {
+      followerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      username: {
+        type: String,
+        required: true,
+      },
+      followedAt: { type: Date, default: Date.now },
+    },
+  ],
   total_followers: {
     type: Number,
     default: 0,
