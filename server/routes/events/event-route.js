@@ -12,12 +12,16 @@ const { deleteEvent } = require("../../controllers/Events/delete-event");
 const { updateEvent } = require("../../controllers/Events/update-event");
 
 const { getSingleEvent } = require("../../controllers/Events/get-single-event");
+const { reviewEvent } = require("../../controllers/Events/review-event");
 /////// all events routes:
 
 router.post("/add", createEvent);
 router.get("/all", getEvents);
+
 router.delete("/delete/:id", deleteEvent);
 router.patch("/edit/:id", updateEvent);
+
 router.get("/:id", getSingleEvent);
+router.post("/review/add/:eventid", reviewEvent);
 
 module.exports = router;
