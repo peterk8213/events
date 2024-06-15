@@ -18,6 +18,12 @@ app.use(morgan("dev"));
 // Middleware to parse cookies
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
+///////  jwt verification middleware
+const { authenticateUser } = require("./middleware/authentication");
+
+// Apply authenticateUser globally for all routes except login and signup
+app.use(authenticateUser);
+
 //////  starting the app   //////
 
 const port = process.env.PORT || 5000;
