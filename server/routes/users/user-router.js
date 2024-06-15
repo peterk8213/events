@@ -5,15 +5,35 @@ const router = express.Router();
 
 /////import all functions
 
-const { followUser } = require("../../controllers/users/follow");
-const { unfollowUser } = require("../../controllers/users/unfollow");
+const {
+  updateProfile,
+  unfollowUser,
+  viewProfile,
+  followUser,
+} = require("../../controllers/users");
 
-const { viewProfile } = require("../../controllers/users/profile");
-const { updateProfile } = require("../../controllers/users/update-profile");
+///// user route input validators
+
+const {
+  followUserValidator,
+  unfollowUserValidator,
+} = require("../../services/validator/users/");
+
+const validateRequest = require("../../services/validator/validateRequest");
 
 ////////// all routes
-router.post("/followUser", followUser);
-router.post("/unfollowUser", unfollowUser);
+router.post(
+  "/followUser/:userId",
+  followUserValidator,
+  validateRequest,
+  followUser
+);
+router.post(
+  "/unfollowUser/:userId",
+  unfollowUserValidator,
+  validateRequest,
+  unfollowUser
+);
 
 router.get("/profile", viewProfile);
 router.post("/profile/edit/:id", updateProfile);

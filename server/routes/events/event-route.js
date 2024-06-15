@@ -5,23 +5,45 @@ const router = express.Router();
 
 /// import all event functions here: delete event, update,new,get
 
-const { createEvent } = require("../../controllers/Events/new-event");
-const { getEvents } = require("../../controllers/Events/get-events");
+const {
+  createEvent,
+  getEvents,
+  deleteEvent,
+  updateEvent,
+  getSingleEvent,
+} = require("../../controllers/Events");
+const { reviewEvent } = require("../../controllers/reviews/review-event");
 
-const { deleteEvent } = require("../../controllers/Events/delete-event");
-const { updateEvent } = require("../../controllers/Events/update-event");
+///// event route input validators
 
-const { getSingleEvent } = require("../../controllers/Events/get-single-event");
-const { reviewEvent } = require("../../controllers/Events/review-event");
+const {
+  deleteEventValidator,
+  getEventValidator,
+  createEventValidator,
+  reviewValidator,
+} = require("../../services/validator/events");
+
+const validateRequest = require("../../services/validator/validateRequest");
+
 /////// all events routes:
 
-router.post("/add", createEvent);
+router.post("/add", createEventValidator, createEvent);
 router.get("/all", getEvents);
 
-router.delete("/delete/:id", deleteEvent);
+router.delete(
+  "/delete/:id",
+  deleteEventValidator,
+  validateRequest,
+  deleteEvent
+);
 router.patch("/edit/:id", updateEvent);
 
-router.get("/:id", getSingleEvent);
-router.post("/review/add/:eventid", reviewEvent);
+router.get("/:id", getEventValidator, validateRequest, getSingleEvent);
+router.post(
+  "/review/add/:eventid",
+  reviewValidator,
+  validateRequest,
+  reviewEvent
+);
 
 module.exports = router;

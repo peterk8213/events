@@ -19,6 +19,7 @@ const register = async (req, res, next) => {
       })
       .json({
         status: "ok",
+        msg: "signup successful",
         user: {
           email: user.email,
           username: user.username,

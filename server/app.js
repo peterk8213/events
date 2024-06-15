@@ -4,9 +4,11 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 require("express-async-errors");
+const helmet = require("helmet");
 const connectDB = require("./db/connect");
 
 app.use(express.json());
+app.use(helmet());
 
 //
 const cookieParser = require("cookie-parser");

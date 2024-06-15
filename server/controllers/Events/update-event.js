@@ -4,14 +4,22 @@ const { StatusCodes } = require("http-status-codes");
 const updateEvent = async (req, res) => {
   try {
     const eventId = req.params.id;
-    const updates = { ...req.body };
-    const event = await Event.findByIdAndUpdate({ _id: eventId }, updates, {
-      new: true,
-      runValidators: true,
+
+    const updates = req.body;
+    const event = await Event.findById(eventId);
+
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // Update only specified fields
+    Object.keys(updates).forEach((key) => {
+      event[key] = updates[key];
     });
-    res
-      .status(StatusCodes.CREATED)
-      .json({ msg: "updated successfully", event });
+
+    // Save updated event
+    await event.save();
+    res.status(StatusCodes.OK).json({ msg: "updated successfully", event });
   } catch (error) {
     console.log(error);
     res

@@ -9,7 +9,6 @@ const updateProfile = async (req, res) => {
     // Check and add each field to updates object if present in the request body
     if (req.body.username) updates.username = req.body.username;
     if (req.body.bio) updates.bio = req.body.bio;
-    if (req.body.gender) updates.gender = req.body.gender;
     if (req.body.profile_picture)
       updates.profile_picture = req.body.profile_picture;
     if (req.body.instagram_profile)
@@ -25,7 +24,9 @@ const updateProfile = async (req, res) => {
     const user = await User.findByIdAndUpdate({ _id: userId }, updates, {
       new: true,
       runValidators: true,
-    });
+    }).select(
+      "-email -birthdate -country -gender -following -followers -isVerified -password -phonenumber -role"
+    );
     res.status(StatusCodes.CREATED).json({ msg: "updated successfully", user });
   } catch (error) {
     console.log(error);

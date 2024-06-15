@@ -3,7 +3,8 @@ const { StatusCodes } = require("http-status-codes");
 
 const unfollowUser = async (req, res) => {
   try {
-    const { userId, tobeunfollowedUserId } = req.body;
+    const { userId } = req.body;
+    const tobeunfollowedUserId = req.params.userId;
 
     const user = await User.findById(userId);
     if (!user.following.some((f) => f.userId.equals(tobeunfollowedUserId))) {

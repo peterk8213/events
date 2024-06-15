@@ -1,5 +1,7 @@
 project start date monday 11th june 2024
 
 events sharing, ticketing,hosting and posting platform
-reviwes should be submitted by users who attended the event only~~
+reviews should be submitted by users who attended the event only~~
 users should submit a single review per event
+
+event search. user will enter the username. the organizer id with that username will be cached in redis

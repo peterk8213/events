@@ -3,7 +3,8 @@ const { StatusCodes } = require("http-status-codes");
 
 const followUser = async (req, res) => {
   try {
-    const { userId, tobeFollowedUserId } = req.body;
+    const { userId } = req.body;
+    const tobeFollowedUserId = req.params.userId;
 
     // Check if the user is already following tobeFollowedUserId
     const user = await User.findById(userId);

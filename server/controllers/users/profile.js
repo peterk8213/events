@@ -6,7 +6,7 @@ const viewProfile = async (req, res) => {
     // change when jwt is implemented
     const { userId } = req.body;
     const user = await User.findById({ _id: userId }).select(
-      "-email -birthdate -country -gender -following -followers -isVerified -password"
+      "-email -birthdate -country -gender -following -followers -isVerified -password -phonenumber -role"
     );
     if (!user) {
       return res.status(StatusCodes.NOT_FOUND).json({ msg: "user not found" });
