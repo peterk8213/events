@@ -24,22 +24,18 @@ const authenticateUser = (req, res, next) => {
   const token = req.signedCookies.Token;
 
   if (!token) {
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .json({ message: "No token provided" });
+    throw new BadRequestError("No token provided");
   }
 
   try {
     // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET);
     // Attach decoded user information to the request object
-    req.user = decoded.user;
+    req.user = payload;
     next();
   } catch (error) {
     console.error("Token verification failed:", error.message);
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .json({ message: "Invalid token" });
+    next(error);
   }
 };
 

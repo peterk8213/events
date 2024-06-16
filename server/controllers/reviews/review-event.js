@@ -7,8 +7,10 @@ const { StatusCodes } = require("http-status-codes");
 
 const reviewEvent = async (req, res) => {
   try {
-    const { userId, username, body, rating } = req.body;
+    const { username, body, rating } = req.body;
+    const { userId } = req.user;
     const eventId = req.params.eventid;
+
     const reviews = await Review.create({
       userId,
       username,

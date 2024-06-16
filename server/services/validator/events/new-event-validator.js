@@ -13,10 +13,10 @@ const createEventValidator = [
     .isLength({ min: 3, max: 200 })
     .withMessage("Event description must be between 3 and 200 characters"),
 
-  body("organizer_id")
-    .trim()
-    .isMongoId()
-    .withMessage("Invalid organizer ID format"),
+  // body("organizer_id")
+  //   .trim()
+  //   .isMongoId()
+  //   .withMessage("Invalid organizer ID format"),
 
   body("location.address").trim().notEmpty().withMessage("Address is required"),
 

@@ -1,17 +1,24 @@
 const User = require("../../models/User");
 const { StatusCodes } = require("http-status-codes");
+const {
+  UnauthenticatedError,
+  NotFoundError,
+  BadRequestError,
+} = require("../../errors");
 
-const followUser = async (req, res) => {
+const followUser = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.user;
     const tobeFollowedUserId = req.params.userId;
 
     // Check if the user is already following tobeFollowedUserId
     const user = await User.findById(userId);
+
+    if (!user._id) {
+      throw new NotFoundError("user not found");
+    }
     if (user.following.some((f) => f.userId.equals(tobeFollowedUserId))) {
-      return res
-        .status(400)
-        .json({ message: "You are already following this user" });
+      throw new BadRequestError("You are already following this user");
     }
 
     // Add userId to tobeFollowedUserId's followers
@@ -44,7 +51,7 @@ const followUser = async (req, res) => {
     res.status(200).json({ message: `followed ${followedUser.username}` });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    next(error);
   }
 };
 

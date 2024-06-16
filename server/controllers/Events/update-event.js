@@ -1,15 +1,25 @@
 const Event = require("../../models/events");
 const { StatusCodes } = require("http-status-codes");
 
-const updateEvent = async (req, res) => {
+const {
+  UnauthenticatedError,
+  BadRequestError,
+  NotFoundError,
+} = require("../../errors");
+
+const updateEvent = async (req, res, next) => {
   try {
     const eventId = req.params.id;
+    const { userId } = req.user;
 
     const updates = req.body;
-    const event = await Event.findById(eventId);
+    if (!updates) {
+      throw new BadRequestError("no fields to update");
+    }
+    const event = await Event.findOne({ _id: eventId, organizer_id: userId });
 
-    if (!event) {
-      return res.status(404).json({ message: "Event not found" });
+    if (!event || event.is_deleted) {
+      throw new NotFoundError("sorry event not found");
     }
 
     // Update only specified fields
@@ -22,9 +32,7 @@ const updateEvent = async (req, res) => {
     res.status(StatusCodes.OK).json({ msg: "updated successfully", event });
   } catch (error) {
     console.log(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "something went wrong try again later" });
+    next(error);
   }
 };
 

@@ -11,6 +11,7 @@ const {
   deleteEvent,
   updateEvent,
   getSingleEvent,
+  getUserEvents,
 } = require("../../controllers/Events");
 const { reviewEvent } = require("../../controllers/reviews/review-event");
 
@@ -38,7 +39,10 @@ router.delete(
 );
 router.patch("/edit/:id", updateEvent);
 
-router.get("/:id", getEventValidator, validateRequest, getSingleEvent);
+router.get("/view/:id", getEventValidator, validateRequest, getSingleEvent);
+
+router.get("/myUploads", getUserEvents);
+
 router.post(
   "/review/add/:eventid",
   reviewValidator,

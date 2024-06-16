@@ -36,7 +36,7 @@ router.post(
 );
 
 router.get("/profile", viewProfile);
-router.post("/profile/edit/:id", updateProfile);
+router.patch("/profile/edit/", updateProfile);
 
 // export router
 module.exports = router;

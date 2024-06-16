@@ -2,11 +2,17 @@
 
 const User = require("../../models/User");
 const { StatusCodes } = require("http-status-codes");
+const { UnauthenticatedError, BadRequestError } = require("../../errors");
 
 const register = async (req, res, next) => {
   try {
     const user = await User.create({ ...req.body });
+
     const token = user.createJWT();
+    if (!token) {
+      throw new UnauthenticatedError("invalid token");
+    }
+
     res
       .status(StatusCodes.CREATED)
       .cookie("Token", token, {
@@ -29,6 +35,7 @@ const register = async (req, res, next) => {
       });
   } catch (error) {
     console.log(error);
+    next(error);
   }
 };
 

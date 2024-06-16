@@ -1,12 +1,17 @@
 const User = require("../../models/User");
 const { StatusCodes } = require("http-status-codes");
 
-const unfollowUser = async (req, res) => {
+const { NotFoundError } = require("../../errors");
+
+const unfollowUser = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.user;
     const tobeunfollowedUserId = req.params.userId;
 
     const user = await User.findById(userId);
+    if (!user || user === null) {
+      throw new NotFoundError("User not found");
+    }
     if (!user.following.some((f) => f.userId.equals(tobeunfollowedUserId))) {
       return res.status(400).json({
         message: "You can only follow users you are not already following.",
@@ -33,7 +38,7 @@ const unfollowUser = async (req, res) => {
       .json({ message: "User unfollowed successfully", user: updatedUser });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    next(error);
   }
 };
 

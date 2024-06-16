@@ -1,9 +1,15 @@
 const User = require("../../models/User");
 const { StatusCodes } = require("http-status-codes");
 
-const updateProfile = async (req, res) => {
+const {
+  UnauthenticatedError,
+  BadRequestError,
+  NotFoundError,
+} = require("../../errors");
+
+const updateProfile = async (req, res, next) => {
   try {
-    const userId = req.params.id;
+    const { userId } = req.user;
     const updates = {};
 
     // Check and add each field to updates object if present in the request body
@@ -16,9 +22,7 @@ const updateProfile = async (req, res) => {
 
     // Ensure there are fields to update
     if (Object.keys(updates).length === 0) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send({ error: "No valid fields to update" });
+      throw new BadRequestError("No valid fields to update");
     }
 
     const user = await User.findByIdAndUpdate({ _id: userId }, updates, {
@@ -27,12 +31,15 @@ const updateProfile = async (req, res) => {
     }).select(
       "-email -birthdate -country -gender -following -followers -isVerified -password -phonenumber -role"
     );
+
+    if (!user || user === null) {
+      throw new NotFoundError("User not found");
+    }
+
     res.status(StatusCodes.CREATED).json({ msg: "updated successfully", user });
   } catch (error) {
     console.log(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "something went wrong try again later" });
+    next(error);
   }
 };
 

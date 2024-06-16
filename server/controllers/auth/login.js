@@ -1,6 +1,12 @@
 const User = require("../../models/User");
 const { StatusCodes } = require("http-status-codes");
 
+const {
+  UnauthenticatedError,
+  BadRequestError,
+  NotFoundError,
+} = require("../../errors");
+
 const login = async (req, res, next) => {
   try {
     const { input, password } = req.body;
@@ -13,18 +19,13 @@ const login = async (req, res, next) => {
       : await User.findOne({ username: input });
 
     if (!user) {
-      return res
-        .status(StatusCodes.UNAUTHORIZED)
-        .json({ msg: "Invalid credentials" });
+      throw new UnauthenticatedError("Invalid credentials");
     }
 
     if (user) {
       isMatch = await user.comparePassword(password);
       if (!isMatch) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-          msg: "Invalid phone number or password",
-        });
-        throw new Error("Invalid password");
+        throw new BadRequestError("Invalid phone number or password");
       }
 
       const token = user.createJWT();
@@ -47,9 +48,7 @@ const login = async (req, res, next) => {
         });
     }
   } catch (error) {
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "something went wrong try again later" });
+    next(error);
     console.log(error);
   }
 };

@@ -24,20 +24,6 @@ const { authenticateUser } = require("./middleware/authentication");
 // Apply authenticateUser globally for all routes except login and signup
 app.use(authenticateUser);
 
-//////  starting the app   //////
-
-const port = process.env.PORT || 5000;
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGO_URI);
-    app.listen(port, () => {
-      console.log(`Server is listening on port: ${port}`);
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 ///////   routes   ///////
 
 // authentication route //
@@ -54,5 +40,27 @@ app.use("/api/v1/events", EventsRouter);
 
 const UserRouter = require("./routes/users/user-router");
 app.use("/api/v1/user", UserRouter);
+
+////////   error handle middlewares   ////
+
+const notFoundMiddleware = require("./middleware/not-found");
+const errorHandlerMiddleware = require("./middleware/error-handler");
+
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
+
+//////  starting the app   //////
+
+const port = process.env.PORT || 5000;
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    app.listen(port, () => {
+      console.log(`Server is listening on port: ${port}`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 start();

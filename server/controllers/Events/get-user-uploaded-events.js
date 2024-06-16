@@ -2,15 +2,12 @@ const Event = require("../../models/events");
 
 const { StatusCodes } = require("http-status-codes");
 
-const {
-  UnauthenticatedError,
-  BadRequestError,
-  NotFoundError,
-} = require("../../errors");
+const { NotFoundError } = require("../../errors");
 
-const getEvents = async (req, res, next) => {
+const getUserEvents = async (req, res, next) => {
   try {
-    const query = { is_deleted: { $ne: true } }; // Exclude documents with is_deleted: true
+    const { userId } = req.user;
+    const query = { is_deleted: { $ne: true }, organizer_id: userId }; // Exclude documents with is_deleted: true
 
     // Create a promise for the count
     const countPromise = Event.countDocuments(query);
@@ -30,4 +27,4 @@ const getEvents = async (req, res, next) => {
   }
 };
 
-module.exports = { getEvents };
+module.exports = { getUserEvents };

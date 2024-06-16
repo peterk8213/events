@@ -53,6 +53,10 @@ const UserSchema = new mongoose.Schema({
     enum: ["user", "organizer"],
     default: "user",
   },
+  website_link: {
+    type: String,
+    required: false,
+  },
   instagram_profile: {
     type: String,
     required: false,
@@ -116,9 +120,8 @@ UserSchema.methods.createJWT = function () {
   const user = this;
   const token = jwt.sign(
     {
-      id: user._id,
+      userId: user._id,
       username: user.username,
-      email: user.email,
       role: user.role,
       isVerified: user.isVerified,
     },

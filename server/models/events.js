@@ -52,6 +52,10 @@ const EventsSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    isPublic: {
+      type: Boolean,
+      default: true,
+    },
     is_virtual: {
       type: Boolean,
       default: false,
