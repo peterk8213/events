@@ -16,7 +16,7 @@ const getEvents = async (req, res, next) => {
     const countPromise = Event.countDocuments(query);
 
     // Create a promise for the query
-    const eventsPromise = Event.find(query).sort("createdAt").lean();
+    const eventsPromise = Event.find(query).sort("-createdAt").lean();
 
     // Await both promises
     const [count, events] = await Promise.all([countPromise, eventsPromise]);

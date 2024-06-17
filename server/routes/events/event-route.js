@@ -12,6 +12,7 @@ const {
   updateEvent,
   getSingleEvent,
   getUserEvents,
+  saveEvent,
 } = require("../../controllers/Events");
 const { reviewEvent } = require("../../controllers/reviews/review-event");
 
@@ -30,6 +31,7 @@ const validateRequest = require("../../services/validator/validateRequest");
 
 router.post("/add", createEventValidator, createEvent);
 router.get("/all", getEvents);
+router.post("/save/:eventId", saveEvent);
 
 router.delete(
   "/delete/:id",

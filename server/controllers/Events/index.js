@@ -6,6 +6,7 @@ const { updateEvent } = require("./update-event");
 
 const { getSingleEvent } = require("./get-single-event");
 const { getUserEvents } = require("./get-user-uploaded-events");
+const { saveEvent } = require("./save-event");
 
 module.exports = {
   createEvent,
@@ -14,4 +15,5 @@ module.exports = {
   updateEvent,
   getSingleEvent,
   getUserEvents,
+  saveEvent,
 };

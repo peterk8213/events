@@ -1,26 +1,29 @@
-const Event = require("../../models/events");
+const SavedEvents = require("../../models/saved-events");
 
 const { StatusCodes } = require("http-status-codes");
 
-const saveEvent = async (req, res) => {
+const {
+  UnauthenticatedError,
+  BadRequestError,
+  NotFoundError,
+} = require("../../errors");
+
+const saveEvent = async (req, res, next) => {
   try {
-    const query = { is_deleted: { $ne: true } }; // Exclude documents with is_deleted: true
+    const eventId = req.params.eventId;
+    const { userId } = req.user;
 
-    // Create a promise for the count
-    const countPromise = Event.countDocuments(query);
+    const is_saved = await SavedEvents.findOne({ eventId, userId });
+    if (is_saved) {
+      throw new BadRequestError("event already saved");
+    }
 
-    // Create a promise for the query
-    const eventsPromise = Event.find(query).sort("createdAt").lean();
+    const savedEvent = await SavedEvents.create({ userId, eventId });
 
-    // Await both promises
-    const [count, events] = await Promise.all([countPromise, eventsPromise]);
-
-    res.status(StatusCodes.OK).json({ count, events });
+    res.status(StatusCodes.OK).json({ savedEvent });
   } catch (error) {
     console.error(error);
-    res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ msg: "something went wrong try again later" });
+    next(error);
   }
 };
 
